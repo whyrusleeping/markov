@@ -31,6 +31,6 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < 20; i++ {
-		fmt.Println(n.GeneratePhrase())
+		fmt.Println(n.GeneratePhrase(0))
 	}
 }

@@ -58,26 +58,27 @@ func (n *Node) Insert(words []string) {
 	next.Insert(words[1:])
 }
 
-func (n *Node) Generate() []string {
-	return n.generate(nil)
+func (n *Node) Generate(damping int) []string {
+	return n.generate(nil, damping)
 }
 
-func (n *Node) GeneratePhrase() string {
-	return strings.Join(n.Generate(), " ")
+func (n *Node) GeneratePhrase(damping int) string {
+	return strings.Join(n.Generate(damping), " ")
 }
 
-func (n *Node) selectNext() *Node {
-	total := n.Final
+func (n *Node) selectNext(damping int) *Node {
+	endval := n.Final + damping
+	total := endval
 	for _, l := range n.Next {
 		total += l.Weight
 	}
 
 	i := rand.Intn(total)
-	if i < n.Final {
+	if i < endval {
 		return nil
 	}
 
-	i -= n.Final
+	i -= endval
 	for _, l := range n.Next {
 		if i < l.Weight {
 			return l.Target
@@ -88,13 +89,13 @@ func (n *Node) selectNext() *Node {
 	panic("shouldnt get here")
 }
 
-func (n *Node) generate(cur []string) []string {
-	l := n.selectNext()
+func (n *Node) generate(cur []string, damping int) []string {
+	l := n.selectNext(damping)
 	if l == nil {
 		return cur
 	}
 
-	return l.generate(append(cur, l.Value))
+	return l.generate(append(cur, l.Value), damping)
 }
 
 func SplitPhrase(p string) []string {
