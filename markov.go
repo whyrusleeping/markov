@@ -23,7 +23,7 @@ type Link struct {
 }
 
 func (n *Node) InsertPhrase(p string) {
-	n.Insert(strings.Fields(p))
+	n.Insert(SplitPhrase(p))
 }
 
 func (n *Node) Insert(words []string) {
@@ -95,4 +95,21 @@ func (n *Node) generate(cur []string) []string {
 	}
 
 	return l.generate(append(cur, l.Value))
+}
+
+func SplitPhrase(p string) []string {
+	p = strings.ToLower(p)
+	puncts := []string{
+		"(",
+		")",
+		".",
+		",",
+		":",
+		"\"",
+		"'",
+	}
+	for _, c := range puncts {
+		p = strings.Replace(p, c, " "+c+" ", -1)
+	}
+	return strings.Fields(p)
 }
