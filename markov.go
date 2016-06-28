@@ -1,12 +1,8 @@
-package main
+package markov
 
 import (
-	"bufio"
-	"fmt"
 	"math/rand"
-	"os"
 	"strings"
-	"time"
 )
 
 var WordSet map[string]*Node
@@ -99,29 +95,4 @@ func (n *Node) generate(cur []string) []string {
 	}
 
 	return l.generate(append(cur, l.Value))
-}
-
-func main() {
-	if len(os.Args) != 2 {
-		fmt.Println("must pass in corpus file")
-		return
-	}
-
-	infi := os.Args[1]
-	fi, err := os.Open(infi)
-	if err != nil {
-		panic(err)
-	}
-	defer fi.Close()
-
-	n := new(Node)
-	scan := bufio.NewScanner(fi)
-	for scan.Scan() {
-		n.InsertPhrase(scan.Text())
-	}
-
-	rand.Seed(time.Now().UnixNano())
-	for i := 0; i < 20; i++ {
-		fmt.Println(n.GeneratePhrase())
-	}
 }
